@@ -20,7 +20,11 @@
     "test:e2e": "jest --config ./test/jest-e2e.json",
     "migration:create": "./scripts/index.sh migration create",
     "migration:generate": "./scripts/index.sh migration generate",
-    "migration:run": "./scripts/index.sh migration run"
+    "migration:run": "./scripts/index.sh migration run",
+    "entity:create": "./scripts/index.sh newentity",
+    "migration:show": "./scripts/index.sh migration show",
+    "migration:revert": "./scripts/index.sh migration revert",
+    "schema:drop": "./scripts/index.sh drop"
   },
   "dependencies": {
     "@nestjs/common": "^9.0.0",
