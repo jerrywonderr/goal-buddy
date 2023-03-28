@@ -1,10 +1,10 @@
 import { Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, OneToMany, OneToOne, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
-import { GroupMember } from "./groupmember.entity";
-import { Task } from "./task.entity";
-import { User } from "./user.entity";
+import { GroupMemberEntity } from "./groupmember.entity";
+import { TaskEntity } from "./task.entity";
+import { UserEntity } from "./user.entity";
 
-@Entity()
-export class Group {
+@Entity("group")
+export class GroupEntity {
     @PrimaryGeneratedColumn("uuid")
     id: string;
 
@@ -19,14 +19,14 @@ export class Group {
     @Column("int")
     group_perm: number;
 
-    @ManyToOne(() => User, (user) => user.createdGroups)
-    creator: User;
+    @ManyToOne(() => UserEntity, (user) => user.createdGroups)
+    creator: UserEntity;
 
-    @OneToMany(() => GroupMember, (groupMember) => groupMember.group)
-    members: GroupMember[];
+    @OneToMany(() => GroupMemberEntity, (groupMember) => groupMember.group)
+    members: GroupMemberEntity[];
 
-    @OneToMany(() => Task, (task) => task.group)
-    tasks: Task[];
+    @OneToMany(() => TaskEntity, (task) => task.group)
+    tasks: TaskEntity[];
 
     @CreateDateColumn()
     created: Date;

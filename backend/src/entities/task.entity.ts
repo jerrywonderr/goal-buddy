@@ -1,32 +1,40 @@
-import { Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, OneToOne, PrimaryGeneratedColumn } from "typeorm";
-import { Group } from "./group.entity";
-import { User } from "./user.entity";
+import {
+  Column,
+  CreateDateColumn,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  OneToOne,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
+import { GroupEntity } from './group.entity';
+import { UserEntity } from './user.entity';
 
-@Entity()
-export class Task {
-    @PrimaryGeneratedColumn("uuid")
-    id: string;
+@Entity("task")
+export class TaskEntity {
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
 
-    @Column("varchar", {
-        length: 200
-    })
-    title: string;
+  @Column('varchar', {
+    length: 200,
+  })
+  title: string;
 
-    @Column("boolean")
-    done: boolean;
+  @Column('boolean')
+  done: boolean;
 
-    @CreateDateColumn()
-    createdAt: Date;
+  @CreateDateColumn()
+  createdAt: Date;
 
-    @Column("date")
-    deadline: Date;
+  @Column('date')
+  deadline: Date;
 
-    @Column("text")
-    notes: string;
+  @Column('text')
+  notes: string;
 
-    @ManyToOne(() => Group, (group) => group.tasks)
-    group: Group;
+  @ManyToOne(() => GroupEntity, (group) => group.tasks)
+  group: GroupEntity;
 
-    @ManyToOne(() => User, (user) => user.tasks)
-    user: User;
+  @ManyToOne(() => UserEntity, (user) => user.tasks)
+  user: UserEntity;
 }

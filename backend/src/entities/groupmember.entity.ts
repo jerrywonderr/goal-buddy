@@ -1,18 +1,18 @@
 import { UserRole } from "src/helpers/enums";
 import { Column, Entity, JoinColumn, ManyToOne, OneToOne, PrimaryGeneratedColumn } from "typeorm";
-import { Group } from "./group.entity";
-import { User } from "./user.entity";
+import { GroupEntity } from "./group.entity";
+import { UserEntity } from "./user.entity";
 
-@Entity()
-export class GroupMember {
+@Entity("group_member")
+export class GroupMemberEntity {
     @PrimaryGeneratedColumn("uuid")
     id: string;
 
-    @ManyToOne(() => Group, (group) => group.members)
-    group: Group;
+    @ManyToOne(() => GroupEntity, (group) => group.members)
+    group: GroupEntity;
 
-    @ManyToOne(() => User)
-    user: User;
+    @ManyToOne(() => UserEntity)
+    user: UserEntity;
 
     @Column({
         type: 'enum',
