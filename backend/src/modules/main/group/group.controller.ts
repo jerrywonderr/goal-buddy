@@ -1,7 +1,11 @@
-import { Controller, Delete, Get, Param, Patch, Post } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpCode, HttpStatus, Param, Patch, Post } from '@nestjs/common';
+import { CreateGroupDto } from './dto/creategroup.dto';
+import { GroupService } from './group.service';
 
 @Controller('group')
 export class GroupController {
+
+  constructor(private readonly groupService: GroupService) {}
 
   @Get()
   getAll() {
@@ -29,7 +33,7 @@ export class GroupController {
 
     console.log(name);
 
-    return []
+    return [];
   }
 
   @Patch('/:name')
@@ -40,7 +44,7 @@ export class GroupController {
 
     console.log(name);
 
-    return []
+    return [];
   }
 
   @Post('join')
@@ -52,13 +56,14 @@ export class GroupController {
     return [];
   }
 
+  /**
+   * Create a group
+   */
   @Post('create')
-  createGroup() {
-    /**
-     * Create a group
-     */
-
-    return [];
+  @HttpCode(HttpStatus.CREATED)
+  async createGroup(@Body() createDto: CreateGroupDto) {
+    const username = 'wonder1';
+    return await this.groupService.create(createDto, username);
   }
 
   @Post('remove')
@@ -69,7 +74,6 @@ export class GroupController {
 
     console.log(name);
 
-    return []
+    return [];
   }
-
 }

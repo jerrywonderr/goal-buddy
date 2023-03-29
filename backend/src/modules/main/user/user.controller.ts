@@ -1,4 +1,4 @@
-import { Body, Controller, Get, NotFoundException, Post } from '@nestjs/common';
+import { Body, Controller, Get, HttpCode, HttpStatus, NotFoundException, Post } from '@nestjs/common';
 import { UserEntity } from 'src/entities/user.entity';
 import { UserNotFound } from 'src/exceptions/base.exceptions';
 import { EntityNotFoundError } from 'typeorm';
@@ -13,6 +13,7 @@ export class UserController {
    * Create a user account
    */
   @Post('signup')
+  @HttpCode(HttpStatus.CREATED)
   async create(@Body() createDto: CreateUserDto) {
     return await this.userService.create(createDto);
   }
