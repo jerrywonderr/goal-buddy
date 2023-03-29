@@ -27,10 +27,10 @@ export class TaskController {
   @Post()
   @HttpCode(HttpStatus.CREATED)
   async create(@Body() createDto: CreateTaskDto) {
-    const username = 'wonder1';
+    const username = 'wonderr1';
     const task = await this.mainService.setUpTask(createDto, username);
     if (!task) throw new NotAcceptableException('An error occured, try again.',{
-      cause: new Error("Possibly the provided group does not exist")
+      cause: new Error("Possibly user do not belong to the provided group")
     });
     return task;
   }
@@ -42,7 +42,7 @@ export class TaskController {
    */
   @Get()
   async getTasks() {
-    const username = 'wonder1';
+    const username = 'wonderr1';
     return await this.taskService.getTasksByUserName(username);
   }
 }

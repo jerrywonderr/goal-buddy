@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { GroupEntity } from 'src/entities/group.entity';
-import { TaskEntity } from 'src/entities/task.entity';
 import { UserEntity } from 'src/entities/user.entity';
+import { IGetTask } from 'src/helpers/interfaces/gettask.interface';
 import CreateTaskDto from './dto/createtask.dto';
 import TaskRepository from './task.repository';
 
@@ -17,7 +17,7 @@ export class TaskService {
   async create(createDto: CreateTaskDto, group: GroupEntity, user: UserEntity) {
     const { title, notes, deadline } = createDto;
     const task = this.taskRepository.create({
-      notes: notes || "",
+      notes: notes || '',
       title,
       deadline,
       group,
@@ -29,29 +29,51 @@ export class TaskService {
 
   /**
    * Gets all tasks created by user
-   * 
+   *
    * @param {string} username the username of user
    * @returns a promise of array of tasks created by user
    */
   async getTasksByUserName(username: string) {
-    const tasks = await this.taskRepository.findBy({
-      user: { username },
+    const tasks = await this.taskRepository.find({
+      where: {
+        user: { username },
+      },
     });
 
-    return tasks;
+    const response: IGetTask[] = [];
+
+    tasks.forEach(value => {
+      const newValue: IGetTask = {...value, username};
+      response.push(newValue);
+    });
+
+    return response;
   }
 
   /**
    * Gets all tasks attached to a group
-   * 
+   *
    * @param {string} groupname the name of the group
    * @returns a promise of array of tasks attached to group
    */
   async getTasksByGroup(groupname: string) {
-    const tasks = await this.taskRepository.findBy({
-      group: { name: groupname },
+    const tasks = await this.taskRepository.find({
+      where: {
+        group: { name: groupname },
+      },
+      relations: {
+        user: true
+      },
     });
 
-    return tasks;
+    const response: IGetTask[] = [];
+
+    tasks.forEach(value => {
+      const newValue: IGetTask = {...value, username: value.user.username};
+      delete newValue.user;
+      response.push(newValue);
+    });
+
+    return response;
   }
 }
