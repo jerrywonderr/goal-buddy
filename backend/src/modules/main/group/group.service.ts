@@ -1,19 +1,11 @@
 import { Injectable } from '@nestjs/common';
 import { UserEntity } from 'src/entities/user.entity';
-import { UserRole } from 'src/helpers/enums';
-import { EntityNotFoundError } from 'typeorm';
-import { GroupmemberService } from '../groupmember/groupmember.service';
-import { UserService } from '../user/user.service';
 import { CreateGroupDto } from './dto/creategroup.dto';
 import GroupRepository from './group.repository';
 
 @Injectable()
 export class GroupService {
-  constructor(
-    private readonly groupRepository: GroupRepository,
-    private readonly userService: UserService,
-    private readonly groupMemberServce: GroupmemberService,
-  ) {}
+  constructor(private readonly groupRepository: GroupRepository) {}
 
   async getAllGroups() {
     return await this.groupRepository.getAll('');
@@ -21,6 +13,7 @@ export class GroupService {
 
   /**
    * Create a new group
+   *
    * @param createParams - the parameters to be used to create the group
    * @returns the newly created group
    */
@@ -34,5 +27,17 @@ export class GroupService {
     });
     await this.groupRepository.save(group);
     return group;
+  }
+
+  /**
+   * Get the group identified with name
+   *
+   * @param {string} name the name of the group to be found
+   * @returns the group if found else null
+   */
+  async get(name: string) {
+    return await this.groupRepository.findOne({
+      where: { name },
+    });
   }
 }

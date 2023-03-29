@@ -11,11 +11,15 @@ import UserRepository from './user/user.repository';
 import { GroupMemberEntity } from 'src/entities/groupmember.entity';
 import { GroupmemberService } from './groupmember/groupmember.service';
 import { MainService } from './main.service';
+import { TaskService } from './task/task.service';
+import { TaskController } from './task/task.controller';
 import GroupMemberRepository from './groupmember/groupmember.repository';
+import { TaskEntity } from 'src/entities/task.entity';
+import TaskRepository from './task/task.repository';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([GroupEntity, UserEntity, GroupMemberEntity]),
+    TypeOrmModule.forFeature([GroupEntity, UserEntity, GroupMemberEntity, TaskEntity]),
   ],
   providers: [
     GroupService,
@@ -25,7 +29,9 @@ import GroupMemberRepository from './groupmember/groupmember.repository';
     GroupMemberRepository,
     GroupmemberService,
     MainService,
+    TaskService,
+    TaskRepository,
   ],
-  controllers: [GroupController, UserController],
+  controllers: [GroupController, UserController, TaskController],
 })
 export class MainModule {}

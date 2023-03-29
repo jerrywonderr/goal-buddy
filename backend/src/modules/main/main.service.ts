@@ -1,9 +1,12 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotAcceptableException, NotFoundException, PreconditionFailedException } from '@nestjs/common';
+import { UserEntity } from 'src/entities/user.entity';
 import { UserRole } from 'src/helpers/enums';
 import { EntityNotFoundError } from 'typeorm';
 import { CreateGroupDto } from './group/dto/creategroup.dto';
 import { GroupService } from './group/group.service';
 import { GroupmemberService } from './groupmember/groupmember.service';
+import CreateTaskDto from './task/dto/createtask.dto';
+import { TaskService } from './task/task.service';
 import { UserService } from './user/user.service';
 
 @Injectable()
@@ -12,10 +15,12 @@ export class MainService {
     private readonly userService: UserService,
     private readonly groupService: GroupService,
     private readonly groupMemberService: GroupmemberService,
+    private readonly taskService: TaskService
   ) {}
 
   /**
    * Sets up a group i.e creates the group and also create group config for the creator of the group
+   * 
    * @param createParams the necessary params needed tp create the group
    * @param username the username of the user that is creating the group
    * @returns {Promise<GroupEntity>}
@@ -40,5 +45,21 @@ export class MainService {
       user: group.creator,
     });
     return {...group, creator: group.creator.username};
+  }
+
+  /**
+   * sets up a task, simply creates a task
+   * 
+   * @param createTaskConfig the parameters needed to create the task
+   * @param username the username of user creating task
+   * @returns {Promise<TaskEntity>}
+   */
+  async setUpTask(createTaskConfig: CreateTaskDto, username: string) {
+    const { group: groupName } = createTaskConfig;
+    const user = await this.userService.get(username);
+    const group = user?.groups.find(group => group.group.name === groupName);
+    if (!user || !group) return null;
+    const task = await this.taskService.create(createTaskConfig, group.group, user);
+    return task;
   }
 }
