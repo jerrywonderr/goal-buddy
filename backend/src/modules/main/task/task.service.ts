@@ -26,4 +26,18 @@ export class TaskService {
     await this.taskRepository.save(task);
     return { ...task, group: task.group.name, user: task.user.username };
   }
+
+  /**
+   * Gets all tasks created by user
+   * 
+   * @param {string} username the username of user
+   * @returns a promise of array of tasks created by user
+   */
+  async getTasksByUserName(username: string) {
+    const tasks = await this.taskRepository.findBy({
+      user: { username },
+    });
+
+    return tasks;
+  }
 }

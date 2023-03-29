@@ -1,14 +1,26 @@
-import { Body, Controller, HttpCode, HttpStatus, NotAcceptableException, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  HttpCode,
+  HttpStatus,
+  NotAcceptableException,
+  Post,
+} from '@nestjs/common';
 import { MainService } from '../main.service';
 import CreateTaskDto from './dto/createtask.dto';
+import { TaskService } from './task.service';
 
 @Controller('task')
 export class TaskController {
-  constructor(private readonly mainService: MainService) {}
+  constructor(
+    private readonly mainService: MainService,
+    private readonly taskService: TaskService,
+  ) {}
 
   /**
    * Creates a new task
-   * 
+   *
    * @param createDto the body of the request
    * @returns the newly created task
    */
@@ -19,5 +31,16 @@ export class TaskController {
     const task = await this.mainService.setUpTask(createDto, username);
     if (!task) throw NotAcceptableException;
     return task;
+  }
+
+  /**
+   * Gets all task attached to the current user
+   * 
+   * @returns {TaskEntity[]}
+   */
+  @Get()
+  async getTasks() {
+    const username = 'wonder1';
+    return await this.taskService.getTasksByUserName(username);
   }
 }

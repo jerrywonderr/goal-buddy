@@ -1,4 +1,5 @@
 import { Injectable, NotAcceptableException, NotFoundException, PreconditionFailedException } from '@nestjs/common';
+import { TaskEntity } from 'src/entities/task.entity';
 import { UserEntity } from 'src/entities/user.entity';
 import { UserRole } from 'src/helpers/enums';
 import { EntityNotFoundError } from 'typeorm';
