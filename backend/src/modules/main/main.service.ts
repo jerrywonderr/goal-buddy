@@ -5,7 +5,7 @@ import { UserRole } from 'src/helpers/enums';
 import { EntityNotFoundError } from 'typeorm';
 import { CreateGroupDto } from './group/dto/creategroup.dto';
 import { GroupService } from './group/group.service';
-import { GroupmemberService } from './groupmember/groupmember.service';
+import { GroupMemberService } from './groupmember/groupmember.service';
 import CreateTaskDto from './task/dto/createtask.dto';
 import { TaskService } from './task/task.service';
 import { UserService } from './user/user.service';
@@ -15,7 +15,7 @@ export class MainService {
   constructor(
     private readonly userService: UserService,
     private readonly groupService: GroupService,
-    private readonly groupMemberService: GroupmemberService,
+    private readonly groupMemberService: GroupMemberService,
     private readonly taskService: TaskService
   ) {}
 

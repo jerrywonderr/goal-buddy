@@ -6,14 +6,18 @@ import {
   Get,
   HttpCode,
   HttpStatus,
+  NotAcceptableException,
   Param,
   Patch,
   Post,
+  UseGuards,
 } from '@nestjs/common';
+import IsModerator from 'src/helpers/gaurds/moderator.gaurd';
 import { MainService } from '../main.service';
 import { TaskService } from '../task/task.service';
 import { UserService } from '../user/user.service';
 import { CreateGroupDto } from './dto/creategroup.dto';
+import JoinGroupDto from './dto/joingroup.dto';
 import { GroupService } from './group.service';
 
 @Controller('group')
@@ -22,7 +26,7 @@ export class GroupController {
     private readonly groupService: GroupService,
     private readonly mainService: MainService,
     private readonly taskService: TaskService,
-    private readonly userService: UserService
+    private readonly userService: UserService,
   ) {}
 
   /**
@@ -33,7 +37,7 @@ export class GroupController {
     const username = 'wonder1';
     const user = await this.userService.get(username);
     if (!user) throw new ForbiddenException('No current session');
-    return user.groups.map(value => value.group);
+    return user.groups.map((value) => value.group);
   }
 
   @Delete()
@@ -64,13 +68,17 @@ export class GroupController {
     return [];
   }
 
+  /**
+   * Add user to a group
+   */
+  @UseGuards(IsModerator)
   @Post('join')
-  joinGroup() {
-    /**
-     * Add user to a group
-     */
-
-    return [];
+  async joinGroup(@Body() {username, groupname}: JoinGroupDto) {
+    try {
+      return await this.groupService.addToGroup(username, groupname);
+    } catch {
+      throw new NotAcceptableException('An error occured, confirm group name');
+    }
   }
 
   /**

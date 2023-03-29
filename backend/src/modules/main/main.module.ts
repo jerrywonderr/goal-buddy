@@ -9,7 +9,7 @@ import { UserEntity } from 'src/entities/user.entity';
 import { UserService } from './user/user.service';
 import UserRepository from './user/user.repository';
 import { GroupMemberEntity } from 'src/entities/groupmember.entity';
-import { GroupmemberService } from './groupmember/groupmember.service';
+import { GroupMemberService } from './groupmember/groupmember.service';
 import { MainService } from './main.service';
 import { TaskService } from './task/task.service';
 import { TaskController } from './task/task.controller';
@@ -27,7 +27,7 @@ import TaskRepository from './task/task.repository';
     UserRepository,
     UserService,
     GroupMemberRepository,
-    GroupmemberService,
+    GroupMemberService,
     MainService,
     TaskService,
     TaskRepository,

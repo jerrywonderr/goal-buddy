@@ -1,11 +1,18 @@
 import { Injectable } from '@nestjs/common';
 import { UserEntity } from 'src/entities/user.entity';
+import { UserRole } from 'src/helpers/enums';
+import { GroupMemberService } from '../groupmember/groupmember.service';
+import { UserService } from '../user/user.service';
 import { CreateGroupDto } from './dto/creategroup.dto';
 import GroupRepository from './group.repository';
 
 @Injectable()
 export class GroupService {
-  constructor(private readonly groupRepository: GroupRepository) {}
+  constructor(
+    private readonly groupRepository: GroupRepository,
+    private readonly userService: UserService,
+    private readonly groupMemberService: GroupMemberService
+  ) {}
 
   async getAllGroups() {
     return await this.groupRepository.getAll('');
@@ -39,5 +46,28 @@ export class GroupService {
     return await this.groupRepository.findOne({
       where: { name },
     });
+  }
+
+  /**
+   * Adds a user to group
+   * 
+   * @param username the username of user to add to group
+   * @param groupname the name of the group user is to be added
+   * @returns an object on success
+   */
+  async addToGroup(username: string, groupname: string) {
+    const userInGroup = await this.groupMemberService.isUserInGroup(username, groupname); 
+    if (userInGroup) return {
+      message: 'User is already in group'
+    }
+
+    const user = await this.userService.get(username);
+    const group = await this.groupRepository.findOneBy({name: groupname});
+    if (!group || !user) throw Error;
+  
+    await this.groupMemberService.create({group, user, role: UserRole.regular});
+    return {
+      message: 'User added successfully'
+    }
   }
 }

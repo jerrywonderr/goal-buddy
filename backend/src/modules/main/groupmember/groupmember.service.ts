@@ -1,10 +1,9 @@
 import { Injectable } from '@nestjs/common';
-import { CreateGroupDto } from '../group/dto/creategroup.dto';
 import CreateGroupMemberDto from './dto/creategroupmember.dto';
 import GroupMemberRepository from './groupmember.repository';
 
 @Injectable()
-export class GroupmemberService {
+export class GroupMemberService {
   constructor(private readonly groupMemberRepository: GroupMemberRepository) {}
 
   /**
@@ -13,8 +12,31 @@ export class GroupmemberService {
    */
   async create(createGroupOptions: CreateGroupMemberDto) {
     const { group, role, user } = createGroupOptions;
-    const groupConfig = this.groupMemberRepository.create({ role, group, user });
+    const groupConfig = this.groupMemberRepository.create({
+      role,
+      group,
+      user,
+    });
 
     await this.groupMemberRepository.save(groupConfig);
+  }
+
+  /**
+   * Checks if user is in a group
+   * @param username the username of the user
+   * @param groupname the name of the group
+   * @returns {boolean}
+   */
+  async isUserInGroup(username: string, groupname: string) {
+    return await this.groupMemberRepository.exist({
+      where: {
+        user: {
+          username,
+        },
+        group: {
+          name: groupname,
+        },
+      },
+    });
   }
 }
