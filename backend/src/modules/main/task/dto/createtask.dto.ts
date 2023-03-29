@@ -1,4 +1,4 @@
-import { IsDateString, IsNotEmpty, IsString } from "class-validator";
+import { IsDateString, IsNotEmpty, IsOptional, IsString } from "class-validator";
 
 class CreateTaskDto {
   @IsString()
@@ -6,6 +6,7 @@ class CreateTaskDto {
   title: string;
 
   @IsString()
+  @IsOptional()
   notes?: string;
 
   @IsDateString()
