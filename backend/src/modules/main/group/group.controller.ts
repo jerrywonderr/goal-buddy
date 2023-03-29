@@ -1,12 +1,26 @@
-import { Body, Controller, Delete, Get, HttpCode, HttpStatus, Param, Patch, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  HttpCode,
+  HttpStatus,
+  Param,
+  Patch,
+  Post,
+} from '@nestjs/common';
 import { MainService } from '../main.service';
+import { TaskService } from '../task/task.service';
 import { CreateGroupDto } from './dto/creategroup.dto';
 import { GroupService } from './group.service';
 
 @Controller('group')
 export class GroupController {
-
-  constructor(private readonly groupService: GroupService, private readonly mainService: MainService) {}
+  constructor(
+    private readonly groupService: GroupService,
+    private readonly mainService: MainService,
+    private readonly taskService: TaskService
+  ) {}
 
   @Get()
   getAll() {
@@ -26,15 +40,12 @@ export class GroupController {
     return [];
   }
 
+  /**
+   * Get all tasks in a group identified with name
+   */
   @Get('/:name')
-  getAllTasks(@Param('name') name: string) {
-    /**
-     * Get all tasks in a group identified with name
-     */
-
-    console.log(name);
-
-    return [];
+  async getAllTasks(@Param('name') groupName: string) {
+    return await this.taskService.getTasksByGroup(groupName);
   }
 
   @Patch('/:name')

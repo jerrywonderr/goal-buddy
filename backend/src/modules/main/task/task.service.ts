@@ -17,7 +17,7 @@ export class TaskService {
   async create(createDto: CreateTaskDto, group: GroupEntity, user: UserEntity) {
     const { title, notes, deadline } = createDto;
     const task = this.taskRepository.create({
-      notes,
+      notes: notes || "",
       title,
       deadline,
       group,
@@ -36,6 +36,20 @@ export class TaskService {
   async getTasksByUserName(username: string) {
     const tasks = await this.taskRepository.findBy({
       user: { username },
+    });
+
+    return tasks;
+  }
+
+  /**
+   * Gets all tasks attached to a group
+   * 
+   * @param {string} groupname the name of the group
+   * @returns a promise of array of tasks attached to group
+   */
+  async getTasksByGroup(groupname: string) {
+    const tasks = await this.taskRepository.findBy({
+      group: { name: groupname },
     });
 
     return tasks;
