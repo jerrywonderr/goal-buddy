@@ -6,6 +6,8 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { dbConfig } from './config/db/db.config';
 import { UserModule } from './modules/user/user.module';
+import { AuthModule } from './modules/auth/auth.module';
+import { MainModule } from './modules/main/main.module';
 
 @Module({
   imports: [
@@ -22,6 +24,8 @@ import { UserModule } from './modules/user/user.module';
         await new DataSource(options).initialize(),
     }),
     UserModule,
+    AuthModule,
+    MainModule,
   ],
   controllers: [AppController],
   providers: [AppService],

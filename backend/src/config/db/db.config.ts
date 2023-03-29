@@ -7,7 +7,7 @@ export const dbConfig = registerAs('database', () => ({
   username: process.env['DB_USER'],
   password: process.env['DB_PASS'],
   database: process.env['DB_NAME'],
-  entities: [`dist/src/**/*.entity.js`],
+  entities: [`dist/**/*.entity.js`],
   migrationsRun: false,
   synchronize: false,
 }));
