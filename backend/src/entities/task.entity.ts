@@ -1,4 +1,5 @@
 import {
+  BeforeInsert,
   Column,
   CreateDateColumn,
   Entity,
@@ -20,7 +21,7 @@ export class TaskEntity {
   })
   title: string;
 
-  @Column('boolean')
+  @Column('boolean', {default: false})
   done: boolean;
 
   @CreateDateColumn()
