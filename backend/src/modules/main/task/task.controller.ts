@@ -29,7 +29,7 @@ export class TaskController {
   async create(@Body() createDto: CreateTaskDto) {
     const username = 'wonder1';
     const task = await this.mainService.setUpTask(createDto, username);
-    if (!task) throw NotAcceptableException;
+    if (!task) throw new NotAcceptableException();
     return task;
   }
 
