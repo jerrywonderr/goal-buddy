@@ -2,6 +2,7 @@ import {
   Body,
   Controller,
   Delete,
+  ForbiddenException,
   Get,
   HttpCode,
   HttpStatus,
@@ -11,6 +12,7 @@ import {
 } from '@nestjs/common';
 import { MainService } from '../main.service';
 import { TaskService } from '../task/task.service';
+import { UserService } from '../user/user.service';
 import { CreateGroupDto } from './dto/creategroup.dto';
 import { GroupService } from './group.service';
 
@@ -19,16 +21,19 @@ export class GroupController {
   constructor(
     private readonly groupService: GroupService,
     private readonly mainService: MainService,
-    private readonly taskService: TaskService
+    private readonly taskService: TaskService,
+    private readonly userService: UserService
   ) {}
 
+  /**
+   * Get all groups attached to a user
+   */
   @Get()
-  getAll() {
-    /**
-     * Get all groups attached to a user
-     */
-
-    return [];
+  async getUserGroups() {
+    const username = 'wonder1';
+    const user = await this.userService.get(username);
+    if (!user) throw new ForbiddenException('No current session');
+    return user.groups.map(value => value.group);
   }
 
   @Delete()
