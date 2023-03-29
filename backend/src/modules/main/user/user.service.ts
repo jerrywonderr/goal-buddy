@@ -27,7 +27,7 @@ export class UserService {
   }
 
   /**
-   * Gets a user whose name equals username
+   * Gets a user whose name equals username, and groups that user belongs to
    *
    * @param {string} username - the user's username
    * @returns the user if found else null
@@ -35,6 +35,7 @@ export class UserService {
   async get(username: string) {
     return await this.userRepository.findOne({
       where: { username: username },
+      relations: ['groups', 'groups.group']
     });
   }
 }

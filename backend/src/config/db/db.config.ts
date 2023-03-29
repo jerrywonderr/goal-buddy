@@ -9,5 +9,5 @@ export const dbConfig = registerAs('database', () => ({
   database: process.env['DB_NAME'],
   entities: [`dist/**/*.entity.js`],
   migrationsRun: false,
-  synchronize: false,
+  synchronize: false
 }));

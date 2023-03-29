@@ -1,11 +1,12 @@
 import { Body, Controller, Delete, Get, HttpCode, HttpStatus, Param, Patch, Post } from '@nestjs/common';
+import { MainService } from '../main.service';
 import { CreateGroupDto } from './dto/creategroup.dto';
 import { GroupService } from './group.service';
 
 @Controller('group')
 export class GroupController {
 
-  constructor(private readonly groupService: GroupService) {}
+  constructor(private readonly groupService: GroupService, private readonly mainService: MainService) {}
 
   @Get()
   getAll() {
@@ -63,7 +64,7 @@ export class GroupController {
   @HttpCode(HttpStatus.CREATED)
   async createGroup(@Body() createDto: CreateGroupDto) {
     const username = 'wonder1';
-    return await this.groupService.create(createDto, username);
+    return await this.mainService.setUpGroup(createDto, username);
   }
 
   @Post('remove')

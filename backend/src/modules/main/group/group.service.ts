@@ -1,5 +1,8 @@
 import { Injectable } from '@nestjs/common';
+import { UserEntity } from 'src/entities/user.entity';
+import { UserRole } from 'src/helpers/enums';
 import { EntityNotFoundError } from 'typeorm';
+import { GroupmemberService } from '../groupmember/groupmember.service';
 import { UserService } from '../user/user.service';
 import { CreateGroupDto } from './dto/creategroup.dto';
 import GroupRepository from './group.repository';
@@ -9,6 +12,7 @@ export class GroupService {
   constructor(
     private readonly groupRepository: GroupRepository,
     private readonly userService: UserService,
+    private readonly groupMemberServce: GroupmemberService,
   ) {}
 
   async getAllGroups() {
@@ -20,10 +24,8 @@ export class GroupService {
    * @param createParams - the parameters to be used to create the group
    * @returns the newly created group
    */
-  async create(createParams: CreateGroupDto, username: string) {
+  async create(createParams: CreateGroupDto, creator: UserEntity) {
     const { name, task_perm, group_perm } = createParams;
-    const creator = await this.userService.get(username); // Fetch user with that username
-    if (!creator) throw EntityNotFoundError;
     const group = this.groupRepository.create({
       name,
       creator,
