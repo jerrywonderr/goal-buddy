@@ -29,7 +29,9 @@ export class TaskController {
   async create(@Body() createDto: CreateTaskDto) {
     const username = 'wonder1';
     const task = await this.mainService.setUpTask(createDto, username);
-    if (!task) throw new NotAcceptableException();
+    if (!task) throw new NotAcceptableException('An error occured, try again.',{
+      cause: new Error("Possibly the provided group does not exist")
+    });
     return task;
   }
 
