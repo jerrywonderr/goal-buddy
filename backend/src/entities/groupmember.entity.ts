@@ -17,10 +17,14 @@ export class GroupMemberEntity {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @ManyToOne(() => GroupEntity, (group) => group.members)
+  @ManyToOne(() => GroupEntity, (group) => group.members, {
+    onDelete: 'CASCADE'
+  })
   group: GroupEntity;
 
-  @ManyToOne(() => UserEntity, (user) => user.groups)
+  @ManyToOne(() => UserEntity, (user) => user.groups, {
+    onDelete: 'CASCADE'
+  })
   user: UserEntity;
 
   @OneToMany(() => TaskEntity, (tasks) => tasks.groupMember)

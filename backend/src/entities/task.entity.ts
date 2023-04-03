@@ -34,12 +34,18 @@ export class TaskEntity {
   @Column('text')
   notes: string;
 
-  @ManyToOne(() => GroupEntity, (group) => group.tasks)
+  @ManyToOne(() => GroupEntity, (group) => group.tasks, {
+    onDelete: 'CASCADE'
+  })
   group: GroupEntity;
 
-  @ManyToOne(() => GroupMemberEntity, (groupMember) => groupMember.tasks)
+  @ManyToOne(() => GroupMemberEntity, (groupMember) => groupMember.tasks, {
+    onDelete: 'CASCADE'
+  })
   groupMember: GroupMemberEntity;
 
-  @ManyToOne(() => UserEntity, (user) => user.tasks)
+  @ManyToOne(() => UserEntity, (user) => user.tasks, {
+    onDelete: 'CASCADE'
+  })
   user: UserEntity;
 }
