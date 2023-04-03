@@ -70,4 +70,22 @@ export class GroupService {
       message: 'User added successfully'
     }
   }
+
+  /**
+   * Checks if username is the creator of the group
+   * 
+   * @param username the username of user
+   * @param groupname the group name
+   * @returns {Promise<boolean>}
+   */
+  async userIsGroupCreator(username: string, groupname: string) {
+    return await this.groupRepository.exist({
+      where: {
+        creator: {
+          username
+        },
+        name: groupname
+      }
+    });
+  }
 }

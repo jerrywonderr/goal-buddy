@@ -63,4 +63,15 @@ export class MainService {
     const task = await this.taskService.create(createTaskConfig, group.group, user);
     return task;
   }
+
+  async leaveGroup(username: string, groupname: string) {
+
+    const isCreator = await this.groupService.userIsGroupCreator(username, groupname);
+
+    if (isCreator) throw new Error("Error! Cannot remove group creator.");
+
+    await this.groupMemberService.leaveGroup(username, groupname);
+    return true;
+  }
 }
+ 

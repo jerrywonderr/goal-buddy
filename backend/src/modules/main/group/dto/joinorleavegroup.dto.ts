@@ -1,6 +1,6 @@
 import { IsNotEmpty, IsString } from "class-validator";
 
-class JoinGroupDto {
+class JoinOrLeaveGroupDto {
   @IsString()
   @IsNotEmpty()
   groupname: string;
@@ -10,4 +10,4 @@ class JoinGroupDto {
   username: string;
 }
 
-export default JoinGroupDto;
+export default JoinOrLeaveGroupDto;

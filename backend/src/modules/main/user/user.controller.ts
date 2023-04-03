@@ -23,7 +23,7 @@ export class UserController {
    */
   @Get('/user')
   async get() {
-    const username = 'wonder1';
+    const username = 'wonderr1';
     const user = await this.userService.get(username);
     if (!user) throw new UserNotFound(username);
     return user;

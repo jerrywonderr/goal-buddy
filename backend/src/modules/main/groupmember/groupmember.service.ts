@@ -1,6 +1,8 @@
 import { Injectable } from '@nestjs/common';
+import { GroupMemberEntity } from 'src/entities/groupmember.entity';
 import CreateGroupMemberDto from './dto/creategroupmember.dto';
 import GroupMemberRepository from './groupmember.repository';
+import { UserRole } from 'src/helpers/enums';
 
 @Injectable()
 export class GroupMemberService {
@@ -38,5 +40,41 @@ export class GroupMemberService {
         },
       },
     });
+  }
+
+  async leaveGroup(username: string, groupname: string) {
+    console.log(username);
+    console.log(groupname);
+    let uname = username;
+    let gname = groupname;
+    console.log(uname, gname)
+    const resp = await this.groupMemberRepository.find({
+      where: {
+        // role: UserRole.moderator
+        user: {
+          username: uname
+        },
+        group: {
+          name: gname
+        }
+        // user: {
+        //   username,
+        // },
+        // group: {
+        //   name: groupname,
+        },
+        relations: ['user', 'group']
+      // },
+    });
+    console.log(resp);
+    // await this.groupMemberRepository
+    //   .createQueryBuilder()
+    //   .delete()
+    //   .from(GroupMemberEntity)
+    //   .where('user.username = :username', { username })
+    //   .andWhere('group.name = :groupname', { groupname })
+    //   .execute();
+
+    // return true;
   }
 }
