@@ -10,6 +10,7 @@ import {
 } from 'typeorm';
 import { GroupEntity } from './group.entity';
 import { UserEntity } from './user.entity';
+import { GroupMemberEntity } from './groupmember.entity';
 
 @Entity("task")
 export class TaskEntity {
@@ -35,6 +36,9 @@ export class TaskEntity {
 
   @ManyToOne(() => GroupEntity, (group) => group.tasks)
   group: GroupEntity;
+
+  @ManyToOne(() => GroupMemberEntity, (groupMember) => groupMember.tasks)
+  groupMember: GroupMemberEntity;
 
   @ManyToOne(() => UserEntity, (user) => user.tasks)
   user: UserEntity;
