@@ -83,4 +83,23 @@ export class TaskService {
 
     return response;
   }
+
+  /**
+   * Deletes a task
+   *
+   * @param {string} taskId the id of the task to be deleted
+   * @param {string} username the username of the user that created the task
+   * @returns {boolean}
+   */
+  async delete(taskId: string, username: string) {
+    const task = await this.taskRepository.findOneBy({
+      user: {
+        username,
+      },
+      id: taskId,
+    });
+    if (!task) return false;
+    await this.taskRepository.remove(task);
+    return true;
+  }
 }
