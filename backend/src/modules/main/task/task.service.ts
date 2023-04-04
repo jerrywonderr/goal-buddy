@@ -1,9 +1,10 @@
 import { Injectable } from '@nestjs/common';
-import { GroupEntity } from 'src/entities/group.entity';
-import { UserEntity } from 'src/entities/user.entity';
+import { GroupEntity } from 'src/config/db/entities/group.entity';
+import { UserEntity } from 'src/config/db/entities/user.entity';
 import { IGetTask } from 'src/helpers/interfaces/gettask.interface';
 import CreateTaskDto from './dto/createtask.dto';
 import TaskRepository from './task.repository';
+import { GroupMemberEntity } from 'src/config/db/entities/groupmember.entity';
 
 @Injectable()
 export class TaskService {
@@ -14,13 +15,19 @@ export class TaskService {
    * @param createDto the params needed to create the task
    * @returns {Promise<TaskEntity} a promise that resolves to the newly created task
    */
-  async create(createDto: CreateTaskDto, group: GroupEntity, user: UserEntity) {
+  async create(
+    createDto: CreateTaskDto,
+    group: GroupEntity,
+    groupMember: GroupMemberEntity,
+    user: UserEntity,
+  ) {
     const { title, notes, deadline } = createDto;
     const task = this.taskRepository.create({
       notes: notes || '',
       title,
       deadline,
       group,
+      groupMember,
     });
     task.user = user;
     await this.taskRepository.save(task);
@@ -42,8 +49,8 @@ export class TaskService {
 
     const response: IGetTask[] = [];
 
-    tasks.forEach(value => {
-      const newValue: IGetTask = {...value, username};
+    tasks.forEach((value) => {
+      const newValue: IGetTask = { ...value, username };
       response.push(newValue);
     });
 
@@ -62,14 +69,14 @@ export class TaskService {
         group: { name: groupname },
       },
       relations: {
-        user: true
+        user: true,
       },
     });
 
     const response: IGetTask[] = [];
 
-    tasks.forEach(value => {
-      const newValue: IGetTask = {...value, username: value.user.username};
+    tasks.forEach((value) => {
+      const newValue: IGetTask = { ...value, username: value.user.username };
       delete newValue.user;
       response.push(newValue);
     });

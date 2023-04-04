@@ -1,6 +1,8 @@
 import { Injectable } from '@nestjs/common';
+import { GroupMemberEntity } from 'src/config/db/entities/groupmember.entity';
 import CreateGroupMemberDto from './dto/creategroupmember.dto';
 import GroupMemberRepository from './groupmember.repository';
+import { UserRole } from 'src/helpers/enums';
 
 @Injectable()
 export class GroupMemberService {
@@ -38,5 +40,28 @@ export class GroupMemberService {
         },
       },
     });
+  }
+
+  /**
+   * Removes a user from a group, simply deletes the user data from the groupMember table
+   * 
+   * @param {string} groupname the name of the group user is to be removed from
+   * @param {username} username the user's username
+   * @returns {boolean}
+   */
+  async leaveGroup(groupname: string, username: string) {
+    const groupConfig = await this.groupMemberRepository.findOne({
+      where: {
+        user: {
+          username: username,
+        },
+        group: {
+          name: groupname,
+        },
+      }
+    });
+    if (!groupConfig) return false;
+    await this.groupMemberRepository.remove(groupConfig);
+    return true;
   }
 }

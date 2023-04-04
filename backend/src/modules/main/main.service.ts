@@ -1,6 +1,4 @@
 import { Injectable, NotAcceptableException, NotFoundException, PreconditionFailedException } from '@nestjs/common';
-import { TaskEntity } from 'src/entities/task.entity';
-import { UserEntity } from 'src/entities/user.entity';
 import { UserRole } from 'src/helpers/enums';
 import { EntityNotFoundError } from 'typeorm';
 import { CreateGroupDto } from './group/dto/creategroup.dto';
@@ -60,7 +58,19 @@ export class MainService {
     const user = await this.userService.get(username);
     const group = user?.groups.find(group => group.group.name === groupName);
     if (!user || !group) return null;
-    const task = await this.taskService.create(createTaskConfig, group.group, user);
+    const task = await this.taskService.create(createTaskConfig, group.group, group, user);
     return task;
   }
+
+  async leaveGroup(groupname: string, username: string) {
+
+    const isCreator = await this.groupService.userIsGroupCreator(username, groupname);
+
+    if (isCreator) throw new Error("Error! Cannot remove group creator.");
+
+    const status = await this.groupMemberService.leaveGroup(groupname, username);
+    if (!status) return false;
+    return true;
+  }
 }
+ 

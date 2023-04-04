@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   Body,
   Controller,
   Delete,
@@ -7,17 +8,19 @@ import {
   HttpCode,
   HttpStatus,
   NotAcceptableException,
+  NotFoundException,
   Param,
   Patch,
   Post,
   UseGuards,
 } from '@nestjs/common';
 import IsModerator from 'src/helpers/gaurds/moderator.gaurd';
+import { GroupMemberService } from '../groupmember/groupmember.service';
 import { MainService } from '../main.service';
 import { TaskService } from '../task/task.service';
 import { UserService } from '../user/user.service';
 import { CreateGroupDto } from './dto/creategroup.dto';
-import JoinGroupDto from './dto/joingroup.dto';
+import JoinOrLeaveGroupDto from './dto/joinorleavegroup.dto';
 import { GroupService } from './group.service';
 
 @Controller('group')
@@ -27,6 +30,7 @@ export class GroupController {
     private readonly mainService: MainService,
     private readonly taskService: TaskService,
     private readonly userService: UserService,
+    private readonly groupMemberService: GroupMemberService,
   ) {}
 
   /**
@@ -34,10 +38,15 @@ export class GroupController {
    */
   @Get()
   async getUserGroups() {
-    const username = 'wonder1';
+    const username = 'wonderr1';
     const user = await this.userService.get(username);
     if (!user) throw new ForbiddenException('No current session');
-    return user.groups.map((value) => value.group);
+    const response = {
+      username: user.username,
+      email: user.email,
+      groups: user.groups.map((value) => value.group)
+    }
+    return response;
   }
 
   @Delete()
@@ -73,7 +82,7 @@ export class GroupController {
    */
   @UseGuards(IsModerator)
   @Post('join')
-  async joinGroup(@Body() {username, groupname}: JoinGroupDto) {
+  async joinGroup(@Body() { username, groupname }: JoinOrLeaveGroupDto) {
     try {
       return await this.groupService.addToGroup(username, groupname);
     } catch {
@@ -91,14 +100,17 @@ export class GroupController {
     return await this.mainService.setUpGroup(createDto, username);
   }
 
+  /**
+   * Remove user from group identified with name
+   */
+  @UseGuards(IsModerator)
   @Post('remove')
-  leaveGroup() {
-    /**
-     * Remove user from group identified with name
-     */
-
-    console.log(name);
-
-    return [];
+  async leaveGroup(@Body() { groupname, username }: JoinOrLeaveGroupDto) {
+    try {
+      const resp = await this.mainService.leaveGroup(groupname, username);
+      if (!resp) throw Error('Operation not permitted.')
+    } catch (err: any) {
+      throw new BadRequestException(err.message);
+    }
   }
 }

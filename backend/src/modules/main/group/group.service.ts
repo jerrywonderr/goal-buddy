@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { UserEntity } from 'src/entities/user.entity';
+import { UserEntity } from 'src/config/db/entities/user.entity';
 import { UserRole } from 'src/helpers/enums';
 import { GroupMemberService } from '../groupmember/groupmember.service';
 import { UserService } from '../user/user.service';
@@ -69,5 +69,23 @@ export class GroupService {
     return {
       message: 'User added successfully'
     }
+  }
+
+  /**
+   * Checks if username is the creator of the group
+   * 
+   * @param username the username of user
+   * @param groupname the group name
+   * @returns {Promise<boolean>}
+   */
+  async userIsGroupCreator(username: string, groupname: string) {
+    return await this.groupRepository.exist({
+      where: {
+        creator: {
+          username
+        },
+        name: groupname
+      }
+    });
   }
 }

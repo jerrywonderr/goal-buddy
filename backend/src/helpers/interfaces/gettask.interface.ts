@@ -1,4 +1,4 @@
-import { TaskEntity } from "src/entities/task.entity";
+import { TaskEntity } from "src/config/db/entities/task.entity";
 
 export interface IGetTask extends Partial<TaskEntity> {
   username: string

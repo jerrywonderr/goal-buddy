@@ -1,5 +1,5 @@
 import { Body, Controller, Get, HttpCode, HttpStatus, NotFoundException, Post } from '@nestjs/common';
-import { UserEntity } from 'src/entities/user.entity';
+import { UserEntity } from 'src/config/db/entities/user.entity';
 import { UserNotFound } from 'src/exceptions/base.exceptions';
 import { EntityNotFoundError } from 'typeorm';
 import CreateUserDto from './dto/createuser.dto';
@@ -23,7 +23,7 @@ export class UserController {
    */
   @Get('/user')
   async get() {
-    const username = 'wonder1';
+    const username = 'wonderr1';
     const user = await this.userService.get(username);
     if (!user) throw new UserNotFound(username);
     return user;

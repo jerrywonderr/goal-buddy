@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { GroupMemberEntity } from 'src/entities/groupmember.entity';
+import { GroupMemberEntity } from 'src/config/db/entities/groupmember.entity';
 import { DataSource, Repository } from 'typeorm';
 
 @Injectable()
