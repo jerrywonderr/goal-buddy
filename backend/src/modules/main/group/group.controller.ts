@@ -8,7 +8,6 @@ import {
   HttpCode,
   HttpStatus,
   NotAcceptableException,
-  NotFoundException,
   Param,
   Patch,
   Post,

@@ -1,7 +1,5 @@
-import { Body, Controller, Get, HttpCode, HttpStatus, NotFoundException, Post } from '@nestjs/common';
-import { UserEntity } from 'src/config/db/entities/user.entity';
+import { Body, Controller, Get, HttpCode, HttpStatus, Post } from '@nestjs/common';
 import { UserNotFound } from 'src/exceptions/base.exceptions';
-import { EntityNotFoundError } from 'typeorm';
 import CreateUserDto from './dto/createuser.dto';
 import { UserService } from './user.service';
 
