@@ -1,9 +1,9 @@
 import { IsNotEmpty, IsUUID } from "class-validator";
 
-class DeleteTaskDto {
+class TaskDto {
 	@IsNotEmpty()
 	@IsUUID()
 	taskId: string;
 }
 
-export default DeleteTaskDto;
+export default TaskDto;

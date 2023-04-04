@@ -9,11 +9,14 @@ import {
   NotAcceptableException,
   Param,
   Post,
+  Put,
 } from '@nestjs/common';
 import { MainService } from '../main.service';
 import CreateTaskDto from './dto/createtask.dto';
 import { TaskService } from './task.service';
-import DeleteTaskDto from './dto/deletetask.dto';
+import TaskDto from './dto/task.dto';
+import UpdateTaskDto from './dto/updatetaskrequest.dto';
+import MarkAsDoneDto from './dto/markasdone.dto';
 
 @Controller('task')
 export class TaskController {
@@ -55,12 +58,40 @@ export class TaskController {
    * deletes a task
    */
   @Delete(':taskId')
-  async delete(@Param() { taskId }: DeleteTaskDto) {
+  async delete(@Param() { taskId }: TaskDto) {
     const username = 'wonderr1';
     const deleteStatus = await this.taskService.delete(taskId, username);
     if (!deleteStatus) throw new BadRequestException('Error, try again!');
     return {
-      message: 'success'
+      message: 'success',
     };
+  }
+
+  /**
+   * Updates a task's title and notes
+   */
+  @Put(':taskId')
+  async update(
+    @Param() { taskId }: TaskDto,
+    @Body() { title, notes }: UpdateTaskDto,
+  ) {
+    try {
+      const username = 'wonderr1';
+      const updatedTask = await this.taskService.updateInfo(taskId, username, { title, notes });
+      return updatedTask
+    } catch (err) {
+      throw new BadRequestException(err.message);
+    }
+  }
+
+  @Post('complete')
+  async markAsDone(@Body() { taskId }: MarkAsDoneDto) {
+    try {
+      const username = 'wonderr1';
+      const updatedTask = await this.taskService.markAsDone(taskId, username);
+      return updatedTask;
+    } catch (err) {
+      throw new BadRequestException(err.message);
+    }
   }
 }
