@@ -1,19 +1,19 @@
-import { Route, Routes } from 'react-router'
-import './App.css'
-import Layout from './Layout'
-import Home from './pages/Home/Home'
+import { Route, Routes } from 'react-router';
+import Layout from './Layout';
+import Home from './pages/home';
+import { ChakraProvider } from '@chakra-ui/react';
+import theme from './lib/theme';
 
 function App() {
-
   return (
-    <div className="App">
+    <ChakraProvider theme={theme}>
       <Routes>
-        <Route path='/' Component={Layout}>
-          <Route path='/' Component={Home}/>
+        <Route path="*" Component={Layout}>
+          <Route path="" Component={Home} />
         </Route>
       </Routes>
-    </div>
-  )
+    </ChakraProvider>
+  );
 }
 
-export default App
+export default App;
