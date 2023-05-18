@@ -6,7 +6,9 @@ import {
   Get,
   HttpCode,
   HttpStatus,
+  Inject,
   NotAcceptableException,
+  NotFoundException,
   Param,
   Post,
   Put,
@@ -20,10 +22,10 @@ import MarkAsDoneDto from './dto/markasdone.dto';
 
 @Controller('task')
 export class TaskController {
-  constructor(
-    private readonly mainService: MainService,
-    private readonly taskService: TaskService,
-  ) {}
+  @Inject(MainService)
+  private readonly mainService: MainService;
+  @Inject(TaskService)
+  private readonly taskService: TaskService;
 
   /**
    * Creates a new task
@@ -55,6 +57,16 @@ export class TaskController {
   }
 
   /**
+   * Get a task by ID
+   */
+  @Get(':taskId')
+  async getTaskById(@Param() { taskId }: TaskDto) {
+    const task = await this.taskService.get(taskId);
+    if (!task) throw new NotFoundException('Task not found.');
+    return task;
+  }
+
+  /**
    * deletes a task
    */
   @Delete(':taskId')
@@ -77,8 +89,11 @@ export class TaskController {
   ) {
     try {
       const username = 'wonderr1';
-      const updatedTask = await this.taskService.updateInfo(taskId, username, { title, notes });
-      return updatedTask
+      const updatedTask = await this.taskService.updateInfo(taskId, username, {
+        title,
+        notes,
+      });
+      return updatedTask;
     } catch (err) {
       throw new BadRequestException(err.message);
     }
