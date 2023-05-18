@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { GroupEntity } from 'src/config/db/entities/group.entity';
 import { UserEntity } from 'src/config/db/entities/user.entity';
 import { IGetTask } from 'src/helpers/interfaces/gettask.interface';
@@ -10,8 +10,14 @@ import { TaskEntity } from 'src/config/db/entities/task.entity';
 
 @Injectable()
 export class TaskService {
-  constructor(private readonly taskRepository: TaskRepository) {}
+  @Inject(TaskRepository)
+  private readonly taskRepository: TaskRepository;
 
+  /**
+   * Returns the task identified by id
+   * @param id The id of the task to be fetched
+   * @returns {Promise<TaskIdentity|null>}
+   */
   async get(id: string) {
     return await this.taskRepository.findOneBy({ id });
   }

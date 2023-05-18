@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { UserEntity } from 'src/config/db/entities/user.entity';
 import { UserRole } from 'src/helpers/enums';
 import { GroupMemberService } from '../groupmember/groupmember.service';
@@ -8,11 +8,12 @@ import GroupRepository from './group.repository';
 
 @Injectable()
 export class GroupService {
-  constructor(
-    private readonly groupRepository: GroupRepository,
-    private readonly userService: UserService,
-    private readonly groupMemberService: GroupMemberService
-  ) {}
+  @Inject(GroupRepository)
+  private readonly groupRepository: GroupRepository;
+  @Inject(UserService)
+  private readonly userService: UserService;
+  @Inject(GroupMemberService)
+  private readonly groupMemberService: GroupMemberService;
 
   async getAllGroups() {
     return await this.groupRepository.getAll('');
@@ -50,30 +51,38 @@ export class GroupService {
 
   /**
    * Adds a user to group
-   * 
+   *
    * @param username the username of user to add to group
    * @param groupname the name of the group user is to be added
    * @returns an object on success
    */
   async addToGroup(username: string, groupname: string) {
-    const userInGroup = await this.groupMemberService.isUserInGroup(username, groupname); 
-    if (userInGroup) return {
-      message: 'User is already in group'
-    }
+    const userInGroup = await this.groupMemberService.isUserInGroup(
+      username,
+      groupname,
+    );
+    if (userInGroup)
+      return {
+        message: 'User is already in group',
+      };
 
     const user = await this.userService.get(username);
-    const group = await this.groupRepository.findOneBy({name: groupname});
+    const group = await this.groupRepository.findOneBy({ name: groupname });
     if (!group || !user) throw Error;
-  
-    await this.groupMemberService.create({group, user, role: UserRole.regular});
+
+    await this.groupMemberService.create({
+      group,
+      user,
+      role: UserRole.regular,
+    });
     return {
-      message: 'User added successfully'
-    }
+      message: 'User added successfully',
+    };
   }
 
   /**
    * Checks if username is the creator of the group
-   * 
+   *
    * @param username the username of user
    * @param groupname the group name
    * @returns {Promise<boolean>}
@@ -82,10 +91,10 @@ export class GroupService {
     return await this.groupRepository.exist({
       where: {
         creator: {
-          username
+          username,
         },
-        name: groupname
-      }
+        name: groupname,
+      },
     });
   }
 }

@@ -1,12 +1,11 @@
-import { Injectable } from '@nestjs/common';
-import { GroupMemberEntity } from 'src/config/db/entities/groupmember.entity';
+import { Inject, Injectable } from '@nestjs/common';
 import CreateGroupMemberDto from './dto/creategroupmember.dto';
 import GroupMemberRepository from './groupmember.repository';
-import { UserRole } from 'src/helpers/enums';
 
 @Injectable()
 export class GroupMemberService {
-  constructor(private readonly groupMemberRepository: GroupMemberRepository) {}
+  @Inject(GroupMemberRepository)
+  private readonly groupMemberRepository: GroupMemberRepository;
 
   /**
    * Create user config for a group
@@ -44,7 +43,7 @@ export class GroupMemberService {
 
   /**
    * Removes a user from a group, simply deletes the user data from the groupMember table
-   * 
+   *
    * @param {string} groupname the name of the group user is to be removed from
    * @param {username} username the user's username
    * @returns {boolean}
@@ -58,7 +57,7 @@ export class GroupMemberService {
         group: {
           name: groupname,
         },
-      }
+      },
     });
     if (!groupConfig) return false;
     await this.groupMemberRepository.remove(groupConfig);

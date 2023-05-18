@@ -7,6 +7,7 @@ import {
   Get,
   HttpCode,
   HttpStatus,
+  Inject,
   NotAcceptableException,
   Param,
   Patch,
@@ -24,13 +25,16 @@ import { GroupService } from './group.service';
 
 @Controller('group')
 export class GroupController {
-  constructor(
-    private readonly groupService: GroupService,
-    private readonly mainService: MainService,
-    private readonly taskService: TaskService,
-    private readonly userService: UserService,
-    private readonly groupMemberService: GroupMemberService,
-  ) {}
+  @Inject(GroupService)
+  private readonly groupService: GroupService;
+  @Inject(MainService)
+  private readonly mainService: MainService;
+  @Inject(TaskService)
+  private readonly taskService: TaskService;
+  @Inject(UserService)
+  private readonly userService: UserService;
+  @Inject(GroupMemberService)
+  private readonly groupMemberService: GroupMemberService;
 
   /**
    * Get all groups attached to a user
@@ -43,8 +47,8 @@ export class GroupController {
     const response = {
       username: user.username,
       email: user.email,
-      groups: user.groups.map((value) => value.group)
-    }
+      groups: user.groups.map((value) => value.group),
+    };
     return response;
   }
 
@@ -107,7 +111,7 @@ export class GroupController {
   async leaveGroup(@Body() { groupname, username }: JoinOrLeaveGroupDto) {
     try {
       const resp = await this.mainService.leaveGroup(groupname, username);
-      if (!resp) throw Error('Operation not permitted.')
+      if (!resp) throw Error('Operation not permitted.');
     } catch (err: any) {
       throw new BadRequestException(err.message);
     }

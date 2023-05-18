@@ -1,9 +1,9 @@
-import { IsNotEmpty, IsUUID } from "class-validator";
+import { IsNotEmpty, IsUUID } from 'class-validator';
 
 class TaskDto {
-	@IsNotEmpty()
-	@IsUUID()
-	taskId: string;
+  @IsNotEmpty()
+  @IsUUID()
+  taskId: string;
 }
 
 export default TaskDto;

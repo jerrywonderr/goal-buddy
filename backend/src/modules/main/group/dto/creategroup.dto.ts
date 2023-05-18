@@ -1,5 +1,4 @@
-import { IsNotEmpty, IsNotEmptyObject, IsNumber, IsString } from "class-validator";
-import { UserEntity } from "src/config/db/entities/user.entity";
+import { IsNotEmpty, IsNumber, IsString } from 'class-validator';
 
 export class CreateGroupDto {
   @IsString()
@@ -12,5 +11,5 @@ export class CreateGroupDto {
 
   @IsNotEmpty()
   @IsNumber()
-  group_perm: number
+  group_perm: number;
 }

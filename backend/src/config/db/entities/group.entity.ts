@@ -1,36 +1,44 @@
-import { Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, OneToMany, OneToOne, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
-import { GroupMemberEntity } from "./groupmember.entity";
-import { TaskEntity } from "./task.entity";
-import { UserEntity } from "./user.entity";
+import {
+  Column,
+  CreateDateColumn,
+  Entity,
+  ManyToOne,
+  OneToMany,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn,
+} from 'typeorm';
+import { GroupMemberEntity } from './groupmember.entity';
+import { TaskEntity } from './task.entity';
+import { UserEntity } from './user.entity';
 
-@Entity("group")
+@Entity('group')
 export class GroupEntity {
-    @PrimaryGeneratedColumn("uuid")
-    id: string;
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
 
-    @Column("varchar", {
-        length: 200
-    })
-    name: string;
+  @Column('varchar', {
+    length: 200,
+  })
+  name: string;
 
-    @Column("int")
-    task_perm: number;
-    
-    @Column("int")
-    group_perm: number;
+  @Column('int')
+  task_perm: number;
 
-    @ManyToOne(() => UserEntity, (user) => user.createdGroups)
-    creator: UserEntity;
+  @Column('int')
+  group_perm: number;
 
-    @OneToMany(() => GroupMemberEntity, (groupMember) => groupMember.group)
-    members: GroupMemberEntity[];
+  @ManyToOne(() => UserEntity, (user) => user.createdGroups)
+  creator: UserEntity;
 
-    @OneToMany(() => TaskEntity, (task) => task.group)
-    tasks: TaskEntity[];
+  @OneToMany(() => GroupMemberEntity, (groupMember) => groupMember.group)
+  members: GroupMemberEntity[];
 
-    @CreateDateColumn()
-    created: Date;
+  @OneToMany(() => TaskEntity, (task) => task.group)
+  tasks: TaskEntity[];
 
-    @UpdateDateColumn()
-    updated: Date;
+  @CreateDateColumn()
+  created: Date;
+
+  @UpdateDateColumn()
+  updated: Date;
 }
